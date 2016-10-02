@@ -1,3 +1,13 @@
+function showValueSlider(newValue)
+{
+    document.getElementById("rangeslider").innerHTML=newValue;
+}
+
+function showValueSlider2(newValue)
+{
+    document.getElementById("rangeslider2").innerHTML=newValue;
+}
+
 var MilightApp = angular.module('MilightApp',[]);
 
 MilightApp.controller('milightCtrl', function ($scope, $http) {
