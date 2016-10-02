@@ -80,7 +80,7 @@ def route_milight(bridge, bulb, group, action, value):
         return json.dumps({'validation error': str(err)}), status.HTTP_404_NOT_FOUND
 
     mci_parser.execute_command(bridge, bulb, group, action, value)
-    return return json.dumps({'status': 'success'})
+    return json.dumps({'status': 'success'})
 
 
 @app.route('/milight/scan')
