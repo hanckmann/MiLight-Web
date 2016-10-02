@@ -10,11 +10,11 @@
 
 ## In the virtual environment
 
-    pip install flask flask_api
+    pip install flask flask_api uwsgi
 
 ## Upgrade all packages
 
-    pip install --upgrade pip flask flask_api
+    pip install --upgrade pip flask flask_api uwsgi
 
 ## Application should start with the following hashbang
 
