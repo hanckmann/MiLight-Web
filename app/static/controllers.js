@@ -1,22 +1,29 @@
 // On document ready
 // A $( document ).ready() block.
 $( document ).ready(function() {
-  console.log( "ready!" );
+  showMessage("document ready")
+  updateActions('RGBW')
   enableValue('');
 });
 
 
 // Change actions when radiobutton is clicked
 $('#select-bulb input:radio').click(function() {
-  if ($(this).val() === 'RGBW') {
+  bulb = $(this).val();
+  updateActions(bulb);
+});
+
+function updateActions(bulb) {
+  if (bulb === 'RGBW') {
     // console.info('RGBW selected');
     pUrl = '/milight/action_rgbw'
-  } else if ($(this).val() === 'WHITE') {
+  }
+  else if (bulb === 'WHITE') {
     // console.info('WHITE selected');
     pUrl = '/milight/action_white'
   }
   else {
-    $('#bio').text("ERROR: INVALID BULB");
+    showError("Invalid bulb");
   }
 
   $.ajax({
@@ -24,13 +31,14 @@ $('#select-bulb input:radio').click(function() {
   }).done(function(message) {
     // console.log(JSON.stringify(message))
     populateSelect('action', JSON.parse(message))
+    showMessage(JSON.stringify(message, null, 2));
   }).fail(function(message) {
     // console.log(JSON.stringify(message))
-    $('#bio').text(JSON.stringify(message));
+    showError(JSON.stringify(message, null, 2));
   });
 
   document.getElementById('action').disabled = false
-});
+}
 
 
 // Change value input when action is selected
@@ -67,12 +75,12 @@ $('#action').change(function() {
       populateSelect('sel_value', JSON.parse(message))
     }).fail(function(message) {
       // console.log(JSON.stringify(message))
-      $('#bio').text(JSON.stringify(message));
+      showMessage(JSON.stringify(message, null, 2));
     });
     enableValue('sel_value');
   }
   else {
-    $('#bio').text("ERROR: INVALID SEL_VALUE RETURN STUFF");
+    showError("Invalid sel_value return stuff");
   }
 });
 
@@ -123,10 +131,10 @@ function submitAsJson() {
     "bulb":   document.getElementById("RGBW").checked ? 'RGBW' : 'WHITE',
     "action": document.getElementById("action").value,
     "group":  document.getElementById("group").value,
-    "value":  document.getElementById("num_value").value,
+    "value":  getCurrentValue(),
   };
   var JSONString = JSON.stringify(JSONObject);
-  // console.info(JSONString);
+  console.info(JSONString);
 
   $.ajax({
     type : "POST",
@@ -134,10 +142,37 @@ function submitAsJson() {
     data: JSONString,
     contentType: 'application/json;charset=UTF-8'
   }).done(function(message) {
-    $('#bio').text(JSON.stringify(message));
+    showMessage(JSON.stringify(message, null, 2));
   }).fail(function(message) {
-    $('#bio').text(JSON.stringify(message));
+    showError(JSON.stringify(message, null, 2));
   });
+}
+
+function getCurrentValue() {
+  if (!document.getElementById('num_value').disabled) {
+    // Return num_value
+    return document.getElementById("num_value").value
+  }
+  if (!document.getElementById('sel_value').disabled) {
+    // Return sel_value
+    return $("#sel_value option:selected").text()
+  }
+  // In all other cases return an empty string
+  return ""
+}
+
+
+// General functions
+
+function showMessage(message) {
+  console.log(message)
+  $('#result-oke').text(message);
+}
+
+function showError(message) {
+  console.error(message)
+  err = "ERROR: ";
+  $('#result-error').text(err.concat(message));
 }
 
 // function showValueSlider2(newValue) {
