@@ -3,37 +3,11 @@ from flask_api import status
 import json
 import datetime
 
+import mci.mci as mci
+import mci.mci_parser as mci_parser
+
 from app import app
 
-# import the Milight MCI package if possible
-try:
-    # Use this if the milight-mci.egg is installed
-    import mci
-    import mci_parser
-except:
-    try:
-        # Use this if the milight-mci.egg is not installed
-        import os
-        milight_path = '../MiLight-Control-Interface/'
-        if 'MILIGHT_PATH' in os.environ:
-            milight_path = os.environ['MILIGHT_PATH']
-        else:
-            print('WARNING: Please set your MILIGHT_PATH environment variable to the MiLight-Control-Interface project-folder (make sure it is exported).')
-
-        import inspect
-        import sys
-        # include modules from a subforder
-        cmd_subfolder = os.path.realpath(
-            os.path.abspath(os.path.join(os.path.split(
-                inspect.getfile(inspect.currentframe()))[0],
-                os.path.join(milight_path))))
-        if cmd_subfolder not in sys.path:
-            sys.path.insert(0, cmd_subfolder)
-        import mci
-        import mci_parser
-    except ImportError as e:
-        print('ERROR: Could not import the MiLight-Control-Interface package.')
-        sys.exit()
 
 # Populate the bridges dict
 bridges = list()
