@@ -1,64 +1,52 @@
 <!DOCTYPE html>
-<!--<html ng-app="milight">-->
 <html>
 <head>
   <title>Milight Web Interface</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+  <script src="static/jquery.min.js"></script>
+  <script src="static/bootstrap.min.js"></script>
+  <link href="static/bootstrap.min.css" rel="stylesheet">
   <link href="static/style.css" rel="stylesheet">
-  <script src="static/controllers.js"></script>
 </head>
 <body>
     <div class="navbar">
         <div class="navbar-inner">
-            <a class="brand" href="#">ToDo Milight Web Interface</a>
+            <a class="brand" href="#">Milight Web Interface</a>
         </div>
     </div>
     <div id="main" class="container">
-        <p><a href="/milight/scan">Scan for bridges</a></p>
-        <div ng-app="MilightApp">
-          <form action="/milight" method="POST" class="form-horizontal">
+        <div>
+          <form id="miform" class="form-horizontal">
             <fieldset>
               <legend>Milight Control</legend>
 
               <div class="form-group">
                 <label class="col-md-4 control-label" for="bridge">Bridge</label>
                 <div class="col-md-2">
-                  <select id="bridge" name="bridge"  class="form-control" ng-controller="milightCtrl" ng-model="MilightApp" ng-options="item for item in availableBridges">
+                  <select id="bridge" name="bridge"  class="form-control">
+                    {% for bridge in bridges %}
+                    <option value="{{ bridge }}">{{ bridge }}</option>
+                    {% endfor %}
                   </select>
                 </div>
               </div>
 
-              <div ng-controller="dropdownCtrl">
-              <div class="form-group">
-                <label class="col-md-4 control-label" for="bulb">Bulb type</label>
-                <div class="col-md-2">
-                  <select id="bulb"
-                          name="bulb"
-                          class="form-control"
-                          ng-model="customer.Bulb"
-                          ng-options="obj.id as obj.bulb for obj in bulbs"
-                          ng-change="getBulbActions()"
-                          ng-required="true">
-                  </select>
+              <div id="select-bulb" class="form-group">
+                <label class="col-md-4 control-label" for="bulb">Bulb</label>
+                <div class="col-md-1">
+                  <input type="radio" id="RGBW" name="bulb" value="RGBW" checked="checked"><label for="RGBW"> RGBW</label>
+                </div>
+                <div class="col-md-1">
+                  <input type="radio" id="WHITE" name="bulb" value="WHITE"><label for="WHITE"> WHITE</label>
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="col-md-4 control-label" for="action">Action</label>
                 <div class="col-md-2">
-                  <select id="action"
-                          name="action"
-                          class="form-control"
-                          ng-model="customer.Action"
-                          ng-options="x.action as x.action for x in actions"
-                          ng-change = "getActionCities()"
-                          ng-required="true">
+                  <select id="action" name="action"  class="form-control"1>
                   </select>
                 </div>
-              </div>
               </div>
 
               <div class="form-group">
@@ -69,21 +57,31 @@
                     <option value="2">2</option>
                     <option value="3">3</option>
                     <option value="4">4</option>
+                    <option value="ALL">ALL</option>
                   </select>
                 </div>
               </div>
 
-              <div class="form-group">
+              <div id="num_value_div" class="form-group">
                 <label class="col-md-4 control-label" for="value">Value</label>
                 <div class="col-md-2">
-                <input id="value" name="value" placeholder="provide value when applicable" class="form-control input-md" type="text">
+                <input id="num_value" name="no-value" placeholder="" class="form-control input-md" type="number">
                 </div>
               </div>
-<!--
-              <div class="form-group">
-                <label class="col-md-4 control-label" for="valueslider">ValueSlider</label>
+
+              <div id="sel_value_div" class="form-group">
+                <label class="col-md-4 control-label" for="value">Value</label>
                 <div class="col-md-2">
-                <input id="valueslider" name="valueslider" placeholder="provide value when applicable" class="form-control input-md" type="range" min="0" max="25" value="18" onchange="showValueSlider(this.value)"/> <span id="rangeslider">[18]</span>
+                  <select id="sel_value" name="no-value" class="form-control">
+                  </select>
+                </div>
+              </div>
+
+              <!--
+              <div id="txt_value_div" class="form-group">
+                <label class="col-md-4 control-label" for="value">Value</label>
+                <div class="col-md-2">
+                <input id="txt_value" name="no-value" placeholder="" class="form-control input-md" type="text">
                 </div>
               </div>
 
@@ -93,26 +91,20 @@
                 <input id="valueslider2" name="valueslider2" placeholder="provide value when applicable" class="form-control input-md colorrange" type="range" min="0" max="255" value="128" onchange="showValueSlider2(this.value)"/> <span id="rangeslider2">[128]</span>
                 </div>
               </div>
+              -->
 
-
-              <div class="form-group">
-                <label class="col-md-4 control-label" for="value">value</label>
-                <div class="col-md-2">
-                <input id="value" name="value" placeholder="provide value when applicable" class="form-control input-md colorrange" type="range" min="0" max="255" value="128" onchange="showValueSlider2(this.value)"/> <span id="rangeslider2">[128]</span>
-                </div>
-              </div>
--->
               <div class="form-group">
                 <label class="col-md-4 control-label" for="submit"></label>
                 <div class="col-md-4">
-                  <input id="submit" name="submit" class="btn btn-primary" type="submit" value="Submit">
+                    <a href="javascript:submitAsJson();" class="btn btn-primary">Submit!</a>
                 </div>
               </div>
             </fieldset>
           </form>
         </div>
         <p></p>
-        <p><a href="http://blog.miguelgrinberg.com/post/writing-a-javascript-rest-client" target="_blank">source</a></p>
+        <div id="results" class="results"></div>
+        <div id="bio" class="results"></div>
 
     </div>
     <script type="text/javascript">
@@ -120,5 +112,6 @@
         // application code here!
 
     </script>
+    <script src="static/controllers.js"></script>
 </body>
 </html>
