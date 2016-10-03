@@ -44,7 +44,9 @@ bridges_time = datetime.datetime.now()
 @app.route('/index')
 def index():
     """ Landing page """
-    return render_template('index.html')
+    route_milight_scan()
+    return render_template('index.html',
+                           bridges=bridges)
 
 
 @app.route('/milight', methods=['POST'])
@@ -62,6 +64,24 @@ def put_milight():
     return route_milight(bridge, bulb, group, action, value)
 
 
+@app.route('/milight/json', methods=['POST'])
+def route_milight_json():
+    """ Json interface (REST) """
+    print(str(request.json))
+    try:
+        return route_milight(request.json['bridge'],
+                             request.json['bulb'],
+                             request.json['group'],
+                             request.json['action'],
+                             request.json['value'])
+    except KeyError as e:
+        print(json.dumps({'error': str(e)}))
+        return json.dumps({'error': str(e)})
+    except Exception as e:
+        print(json.dumps({'validation error': str(e)}))
+        return json.dumps({'validation error': str(e)})
+
+
 @app.route('/milight/<bridge>/<bulb>/<group>/<action>')
 def route_milight_no_value(bridge, bulb, group, action):
     """ Direct access interface (REST) """
@@ -76,8 +96,7 @@ def route_milight(bridge, bulb, group, action, value):
     try:
         mci_parser.validate_command(bridge, bulb, group, action, value)
     except Exception as e:
-        err = str(e)
-        return json.dumps({'validation error': str(err)}), status.HTTP_404_NOT_FOUND
+        return json.dumps({'validation error': str(e)}), status.HTTP_404_NOT_FOUND
 
     mci_parser.execute_command(bridge, bulb, group, action, value)
     return json.dumps({'status': 'success'})
@@ -109,9 +128,53 @@ def route_milight_bridges():
     return json.dumps({'bridges': bridges, 'time': str(bridges_time)})
 
 
+# Get available actions
+
+@app.route('/milight/action_rgbw')
+def route_get_action_rgbw():
+    """ Get the color codes """
+    return json.dumps(['on', 'off', 'white', 'brightness', 'disco', 'increase_disco_speed', 'decrease_disco_speed', 'color'])
+
+
+@app.route('/milight/action_white')
+def route_get_action_white():
+    """ Get the color codes """
+    return json.dumps(['on', 'off', 'increase_brightness', 'decrease_brightness', 'increase_warmth', 'decrease_warmth', 'brightmode', 'nightmode'])
+
+
+# Get valid values
+
+@app.route('/milight/values_on')
+@app.route('/milight/values_off')
+@app.route('/milight/values_white')
+@app.route('/milight/values_brightmode')
+@app.route('/milight/values_nightmode')
+def route_get_values_none():
+    """ There is not expected value """
+    return json.dumps(None)
+
+
+@app.route('/milight/values_brightness')
+def route_get_values_0_25():
+    """ Expected value: 0 <= value ,= 25 """
+    return json.dumps([0, 25])
+
+
+@app.route('/milight/values_brightness')
+@app.route('/milight/values_increase_disco_speed')
+@app.route('/milight/values_decrease_disco_speed')
+@app.route('/milight/values_increase_brightness')
+@app.route('/milight/values_decrease_brightness')
+@app.route('/milight/values_increase_warmth')
+@app.route('/milight/values_decrease_warmth')
+def route_get_values_1_30():
+    """ Expected value: 1 <= value ,= 30 """
+    return json.dumps([1, 30])
+
+
 @app.route('/milight/color')
 @app.route('/milight/colors')
-def route_get_colors():
+def route_get_values_colors():
     """ Get the color codes """
     return json.dumps([color for color in mci.ColorGroup.COLOR_CODES.keys()])
 
