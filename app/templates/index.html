@@ -24,7 +24,7 @@
 
               <div class="form-group">
                 <label class="col-md-4 control-label" for="bridge">Bridge</label>
-                <div class="col-md-2">
+                <div class="col-md-3">
                   <select id="bridge" name="bridge"  class="form-control">
                     {% for bridge in bridges %}
                     <option value="{{ bridge }}">{{ bridge }}</option>
@@ -35,17 +35,17 @@
 
               <div id="select-bulb" class="form-group">
                 <label class="col-md-4 control-label" for="bulb">Bulb</label>
-                <div class="col-md-1">
+                <div class="col-md-2">
                   <input type="radio" id="RGBW" name="bulb" value="RGBW" checked="checked"><label for="RGBW"> RGBW</label>
                 </div>
-                <div class="col-md-1">
+                <div class="col-md-2">
                   <input type="radio" id="WHITE" name="bulb" value="WHITE"><label for="WHITE"> WHITE</label>
                 </div>
               </div>
 
               <div class="form-group">
                 <label class="col-md-4 control-label" for="action">Action</label>
-                <div class="col-md-2">
+                <div class="col-md-3">
                   <select id="action" name="action"  class="form-control"1>
                   </select>
                 </div>
@@ -53,7 +53,7 @@
 
               <div class="form-group">
                 <label class="col-md-4 control-label" for="group">Group</label>
-                <div class="col-md-2">
+                <div class="col-md-3">
                   <select id="group" name="group" class="form-control">
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -66,38 +66,25 @@
 
               <div id="num_value_div" class="form-group">
                 <label class="col-md-4 control-label" for="value">Value</label>
-                <div class="col-md-2">
-                <input id="num_value" name="no-value" placeholder="" class="form-control input-md" type="number">
+                <div class="col-md-3">
+                <input id="num_value" name="no-value" placeholder="" class="form-control input-md" type="range" value="1" step="1" oninput="outputUpdate(value)">
+                </div>
+                <div class="col-md-1">
+                <output for="num_value" id="set_value"></output>
                 </div>
               </div>
 
               <div id="sel_value_div" class="form-group">
                 <label class="col-md-4 control-label" for="value">Value</label>
-                <div class="col-md-2">
+                <div class="col-md-3">
                   <select id="sel_value" name="no-value" class="form-control">
                   </select>
                 </div>
               </div>
 
-              <!--
-              <div id="txt_value_div" class="form-group">
-                <label class="col-md-4 control-label" for="value">Value</label>
-                <div class="col-md-2">
-                <input id="txt_value" name="no-value" placeholder="" class="form-control input-md" type="text">
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-4 control-label" for="valueslider2">ValueSlider2</label>
-                <div class="col-md-2">
-                <input id="valueslider2" name="valueslider2" placeholder="provide value when applicable" class="form-control input-md colorrange" type="range" min="0" max="255" value="128" onchange="showValueSlider2(this.value)"/> <span id="rangeslider2">[128]</span>
-                </div>
-              </div>
-              -->
-
               <div class="form-group">
                 <label class="col-md-4 control-label" for="submit"></label>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <a href="javascript:submitAsJson();" class="btn btn-primary">Submit!</a>
                 </div>
               </div>

@@ -123,6 +123,10 @@ function populateSelect(select_id, listObj) {
   }
 }
 
+function outputUpdate(vol) {
+  document.querySelector('#set_value').value = vol;
+}
+
 
 // Submit the form data
 function submitAsJson() {
