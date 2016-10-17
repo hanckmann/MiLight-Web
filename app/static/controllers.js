@@ -1,9 +1,10 @@
 // On document ready
 // A $( document ).ready() block.
 $( document ).ready(function() {
-  showMessage("document ready")
   updateActions('RGBW')
   enableValue('');
+  $('#div-error').hide();
+  $('#div-message').hide();
 });
 
 
@@ -31,10 +32,10 @@ function updateActions(bulb) {
   }).done(function(message) {
     // console.log(JSON.stringify(message))
     populateSelect('action', JSON.parse(message))
-    showMessage(JSON.stringify(message, null, 2));
+    showMessage(message);
   }).fail(function(message) {
     // console.log(JSON.stringify(message))
-    showError(JSON.stringify(message, null, 2));
+    showError(message);
   });
 
   document.getElementById('action').disabled = false
@@ -66,7 +67,7 @@ $('#action').change(function() {
     document.getElementById('num_value').max = 30;
     enableValue('num_value');
   }
-  else if (/disco|color/.test(action)) {
+  else if (action ==='disco') {
     pUrl = '/milight/'.concat(action)
     $.ajax({
       url : pUrl
@@ -75,7 +76,20 @@ $('#action').change(function() {
       populateSelect('sel_value', JSON.parse(message))
     }).fail(function(message) {
       // console.log(JSON.stringify(message))
-      showMessage(JSON.stringify(message, null, 2));
+      showMessage(message);
+    });
+    enableValue('sel_value');
+  }
+  else if (action ==='color') {
+    pUrl = '/milight/'.concat(action)
+    $.ajax({
+      url : pUrl
+    }).done(function(message) {
+      // console.log(JSON.stringify(message))
+      populateSelect('sel_value', JSON.parse(message), is_color=true)
+    }).fail(function(message) {
+      // console.log(JSON.stringify(message))
+      showMessage(message);
     });
     enableValue('sel_value');
   }
@@ -105,7 +119,7 @@ function enableValue(sel) {
   }
 }
 
-function populateSelect(select_id, listObj) {
+function populateSelect(select_id, listObj, is_color=false) {
   var select = document.getElementById(select_id);
 
   // Remove all options
@@ -117,6 +131,10 @@ function populateSelect(select_id, listObj) {
   for(var i = 0; i < listObj.length; i++) {
     // console.info(listObj[i]);
     var opt = document.createElement('option');
+    if (is_color === true) {
+        attributedata = 'background: ';
+        opt.setAttribute('style', attributedata.concat(listObj[i]));
+    }
     opt.value = listObj[i];
     opt.innerHTML = listObj[i];
     select.appendChild(opt);
@@ -138,7 +156,7 @@ function submitAsJson() {
     "value":  getCurrentValue(),
   };
   var JSONString = JSON.stringify(JSONObject);
-  console.info(JSONString);
+  // console.info(JSONString);
 
   $.ajax({
     type : "POST",
@@ -146,9 +164,9 @@ function submitAsJson() {
     data: JSONString,
     contentType: 'application/json;charset=UTF-8'
   }).done(function(message) {
-    showMessage(JSON.stringify(message, null, 2));
+    showMessage(message);
   }).fail(function(message) {
-    showError(JSON.stringify(message, null, 2));
+    showError(message);
   });
 }
 
@@ -171,12 +189,21 @@ function getCurrentValue() {
 function showMessage(message) {
   console.log(message)
   $('#result-oke').text(message);
+  hideCountdown('#div-message', 1000);
 }
 
 function showError(message) {
   console.error(message)
   err = "ERROR: ";
   $('#result-error').text(err.concat(message));
+  hideCountdown('#div-error', 5000);
+}
+
+function hideCountdown(div_name, milliseconds) {
+  $(div_name).show();
+  setTimeout(function() {
+    $(div_name).fadeOut(1500);
+  }, milliseconds, div_name);
 }
 
 // function showValueSlider2(newValue) {
