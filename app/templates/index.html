@@ -10,98 +10,96 @@
   <link href="static/style.css" rel="stylesheet">
 </head>
 <body>
-    <!--
-    <div class="navbar">
-        <div class="navbar-inner">
-            <a class="brand" href="#">Milight Web Interface</a>
-        </div>
+  <div class="navbar">
+    <div class="navbar-inner">
+      <a class="brand" href="#">Milight Web Interface</a>
     </div>
-    -->
-    <div id="main" class="container">
-        <div>
-          <form id="miform" class="form-horizontal">
-            <fieldset>
-              <legend>Milight Web Interface</legend>
+  </div>
+  <div id="main" class="container">
+    <div>
+      <form id="miform" class="form-horizontal">
+      <fieldset>
+        <legend>Milight Web Interface</legend>
 
-              <div class="form-group">
-                <label class="col-md-4 control-label" for="bridge">Bridge</label>
-                <div class="col-md-3">
-                  <select id="bridge" name="bridge"  class="form-control">
-                    {% for bridge in bridges %}
-                    <option value="{{ bridge }}">{{ bridge }}</option>
-                    {% endfor %}
-                  </select>
-                </div>
-              </div>
-
-              <div id="select-bulb" class="form-group">
-                <label class="col-md-4 control-label" for="bulb">Bulb</label>
-                <div class="col-md-2">
-                  <input type="radio" id="RGBW" name="bulb" value="RGBW" checked="checked"><label for="RGBW"> RGBW</label>
-                </div>
-                <div class="col-md-2">
-                  <input type="radio" id="WHITE" name="bulb" value="WHITE"><label for="WHITE"> WHITE</label>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-4 control-label" for="action">Action</label>
-                <div class="col-md-3">
-                  <select id="action" name="action"  class="form-control"1>
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-4 control-label" for="group">Group</label>
-                <div class="col-md-3">
-                  <select id="group" name="group" class="form-control">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="ALL">ALL</option>
-                  </select>
-                </div>
-              </div>
-
-              <div id="num_value_div" class="form-group">
-                <label class="col-md-4 control-label" for="value">Value</label>
-                <div class="col-md-3">
-                <input id="num_value" name="no-value" placeholder="" class="form-control input-md" type="range" value="1" step="1" oninput="outputUpdate(value)">
-                </div>
-                <div class="col-md-1">
-                <output for="num_value" id="set_value"></output>
-                </div>
-              </div>
-
-              <div id="sel_value_div" class="form-group">
-                <label class="col-md-4 control-label" for="value">Value</label>
-                <div class="col-md-3">
-                  <select id="sel_value" name="no-value" class="form-control">
-                  </select>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label class="col-md-4 control-label" for="submit"></label>
-                <div class="col-md-3">
-                    <a href="javascript:submitAsJson();" class="btn btn-primary">Submit!</a>
-                </div>
-              </div>
-            </fieldset>
-          </form>
-          <p></p>
-          <div id="div-error"><pre id="result-error" class="result alert alert-danger" role="alert"></pre></div>
-          <div id="div-message"><pre id="result-oke" class="result alert alert-info" role="alert"></pre></div>
+        <div class="form-group">
+        <label class="col-md-4 control-label" for="bridge">Bridge</label>
+        <div class="col-md-3">
+          <select id="bridge" name="bridge"  class="form-control">
+          {% for bridge in bridges %}
+          <option value="{{ bridge }}">{{ bridge }}</option>
+          {% endfor %}
+          </select>
+        </div>
         </div>
 
+        <div id="select-bulb" class="form-group">
+        <label class="col-md-4 control-label" for="bulb">Bulb</label>
+        <div class="col-md-2">
+          <input type="radio" id="RGBW" name="bulb" value="RGBW" checked="checked"><label for="RGBW"> RGBW</label>
+        </div>
+        <div class="col-md-2">
+          <input type="radio" id="WHITE" name="bulb" value="WHITE"><label for="WHITE"> WHITE</label>
+        </div>
+        </div>
+
+        <div class="form-group">
+        <label class="col-md-4 control-label" for="action">Action</label>
+        <div class="col-md-3">
+          <select id="action" name="action"  class="form-control"1>
+          </select>
+        </div>
+        </div>
+
+        <div class="form-group">
+        <label class="col-md-4 control-label" for="group">Group</label>
+        <div class="col-md-3">
+          <select id="group" name="group" class="form-control">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="ALL">ALL</option>
+          </select>
+        </div>
+        </div>
+
+        <div id="num_value_div" class="form-group">
+        <label class="col-md-4 control-label" for="value">Value</label>
+        <div class="col-md-3">
+        <input id="num_value" name="no-value" placeholder="" class="form-control input-md" type="range" value="1" step="1" oninput="outputUpdate(value)">
+        </div>
+        <div class="col-md-1">
+        <output for="num_value" id="set_value"></output>
+        </div>
+        </div>
+
+        <div id="sel_value_div" class="form-group">
+        <label class="col-md-4 control-label" for="value">Value</label>
+        <div class="col-md-3">
+          <select id="sel_value" name="no-value" class="form-control">
+          </select>
+        </div>
+        </div>
+
+        <div class="form-group">
+        <label class="col-md-4 control-label" for="submit"></label>
+        <div class="col-md-3">
+          <a href="javascript:submitAsJson();" class="btn btn-primary">Submit!</a>
+        </div>
+        </div>
+      </fieldset>
+      </form>
+      <p></p>
+      <div id="div-error"><pre id="result-error" class="result alert alert-danger" role="alert"></pre></div>
+      <div id="div-message"><pre id="result-oke" class="result alert alert-info" role="alert"></pre></div>
     </div>
-    <script type="text/javascript">
 
-        // application code here!
+  </div>
+  <script type="text/javascript">
 
-    </script>
-    <script src="static/controllers.js"></script>
+    // application code here!
+
+  </script>
+  <script src="static/controllers.js"></script>
 </body>
 </html>
