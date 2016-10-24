@@ -1,13 +1,3 @@
 input[type='range'].colorrange {
     background: linear-gradient(to right, white, violet, royalblue, lightskyblue, aqua, aquamarine, seagreen, green, limegreen, yellow, goldenrod, orange, red, pink, fuchsia, orchid, lavender, white);
 }
-
-#result-oke {
-    background-color: lightblue;
-    border-color: darkblue;
-}
-
-#result-error {
-    background: red;
-    border-color: darkred;
-}
