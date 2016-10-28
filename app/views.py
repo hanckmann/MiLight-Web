@@ -3,8 +3,9 @@ from flask_api import status
 import json
 import datetime
 
-import mci.mci as mci
-import mci.mci_parser as mci_parser
+import mci.bridges
+import mci.bulbs
+import mci.mci_parser
 
 from app import app
 
@@ -31,10 +32,10 @@ def put_milight():
     group = request.form['group']
     action = request.form['action']
     value = request.form['value']
-    bridge = bridge.replace('string:','')
-    action = action.replace('string:','')
-    bulb = bulb.replace('number:1','RGBW')
-    bulb = bulb.replace('number:2','WHITE')
+    bridge = bridge.replace('string:', '')
+    action = action.replace('string:', '')
+    bulb = bulb.replace('number:1', 'RGBW')
+    bulb = bulb.replace('number:2', 'WHITE')
     return route_milight(bridge, bulb, group, action, value)
 
 
@@ -66,13 +67,14 @@ def route_milight_no_value(bridge, bulb, group, action):
 def route_milight(bridge, bulb, group, action, value):
     """ Direct access interface (REST) """
     # Parse and validate all input
-    print('bridge=' + str(bridge) + '\tbulb=' + str(bulb) + '\tgroup=' + str(group) + '\taction=' + str(action) + '\tvalue=' + str(value))
+    print('bridge=' + str(bridge) + '\tbulb=' + str(bulb) + '\tgroup=' +
+          str(group) + '\taction=' + str(action) + '\tvalue=' + str(value))
     try:
-        mci_parser.validate_command(bridge, bulb, group, action, value)
+        mci.mci_parser.validate_command(bridge, bulb, group, action, value)
     except Exception as e:
         return json.dumps({'validation error': str(e)}), status.HTTP_404_NOT_FOUND
 
-    mci_parser.execute_command(bridge, bulb, group, action, value)
+    mci.mci_parser.execute_command(bridge, bulb, group, action, value)
     return json.dumps({'status': 'success'})
 
 
@@ -81,7 +83,7 @@ def route_milight_scan():
     """ scan for bridges """
     global bridges
     global bridges_time
-    discovered = mci.DiscoverBridge(port=48899).discover()
+    discovered = mci.bridges.DiscoverBridge(port=48899).discover()
     bridges_time = datetime.datetime.now()
     bridges = list()
     for db in discovered:
