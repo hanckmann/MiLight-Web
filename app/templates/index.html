@@ -33,8 +33,8 @@
           <legend>Milight Web Interface</legend>
 
           <div class="form-group">
-          <label class="col-md-4 control-label" for="bridge">Bridge</label>
-          <div class="col-md-3">
+          <label class="col-xs-4 control-label" for="bridge">Bridge</label>
+          <div class="col-xs-3">
             <select id="bridge" name="bridge"  class="form-control">
             {% for bridge in bridges %}
             <option value="{{ bridge }}">{{ bridge }}</option>
@@ -44,26 +44,28 @@
           </div>
 
           <div id="select-bulb" class="form-group">
-          <label class="col-md-4 control-label" for="bulb">Bulb</label>
-          <div class="col-md-2">
-            <input type="radio" id="RGBW" name="bulb" value="RGBW" checked="checked"><label for="RGBW"> RGBW</label>
+          <label class="col-xs-4 control-label" for="bulb">Bulb</label>
+          <div class="col-xs-2"> 
+          <div class="col-sm-6">
+            <input type="radio" id="RGBW" name="bulb" value="RGBW" checked="checked"><label for="RGBW">&nbsp;RGBW</label>
           </div>
-          <div class="col-md-2">
-            <input type="radio" id="WHITE" name="bulb" value="WHITE"><label for="WHITE"> WHITE</label>
+          <div class="col-sm-6">
+            <input type="radio" id="WHITE" name="bulb" value="WHITE"><label for="WHITE">&nbsp;WHITE</label>
+          </div>
           </div>
           </div>
 
           <div class="form-group">
-          <label class="col-md-4 control-label" for="action">Action</label>
-          <div class="col-md-3">
+          <label class="col-xs-4 control-label" for="action">Action</label>
+          <div class="col-xs-3">
             <select id="action" name="action"  class="form-control"1>
             </select>
           </div>
           </div>
 
           <div class="form-group">
-          <label class="col-md-4 control-label" for="group">Group</label>
-          <div class="col-md-3">
+          <label class="col-xs-4 control-label" for="group">Group</label>
+          <div class="col-xs-3">
             <select id="group" name="group" class="form-control">
             <option value="1">1</option>
             <option value="2">2</option>
@@ -75,26 +77,26 @@
           </div>
 
           <div id="num_value_div" class="form-group">
-          <label class="col-md-4 control-label" for="value">Value</label>
-          <div class="col-md-3">
+          <label class="col-xs-4 control-label" for="value">Value</label>
+          <div class="col-xs-3">
           <input id="num_value" name="no-value" placeholder="" class="form-control input-md" type="range" value="1" step="1" oninput="outputUpdate(value)">
           </div>
-          <div class="col-md-1">
+          <div class="col-xs-1">
           <output for="num_value" id="set_value"></output>
           </div>
           </div>
 
           <div id="sel_value_div" class="form-group">
-          <label class="col-md-4 control-label" for="value">Value</label>
-          <div class="col-md-3">
+          <label class="col-xs-4 control-label" for="value">Value</label>
+          <div class="col-xs-3">
             <select id="sel_value" name="no-value" class="form-control">
             </select>
           </div>
           </div>
 
           <div class="form-group">
-          <label class="col-md-4 control-label" for="submit"></label>
-          <div class="col-md-3">
+          <label class="col-xs-4 control-label" for="submit"></label>
+          <div class="col-xs-3">
             <a href="javascript:submitAsJson();" class="btn btn-primary">Submit!</a>
           </div>
           </div>
