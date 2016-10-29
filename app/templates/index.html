@@ -97,28 +97,34 @@
           <div class="form-group">
           <label class="col-xs-4 control-label" for="submit"></label>
           <div class="col-xs-3">
-            <a href="javascript:submitAsJson();" class="btn btn-primary">Submit!</a>
+            <a href="javascript:submitForm();" class="btn btn-primary">Submit!</a>
           </div>
           </div>
         </fieldset>
         </form>
         <p></p>
-        <div id="div-error"><pre id="result-error" class="result alert alert-danger" role="alert"></pre></div>
-        <div id="div-message"><pre id="result-oke" class="result alert alert-info" role="alert"></pre></div>
+        <div id="div-error"><pre id="result-error" class="result alert alert-danger col-xs-12" role="alert"></pre></div>
+        <div id="div-message"><pre id="result-oke" class="result alert alert-info col-xs-12" role="alert"></pre></div>
       </div>
 
       <!-- Quick-action tab, contains some quick-action functionality -->
       <div id="quickactions" class="tab-pane fade in">
-        Unimplemented
+        <div class="col-xs-12">
+          <div class=col-sm-3>
+            <label class="control-label col-xs-2" for="everythingOnOff">All lights</label>
+          </div>
+          <div class=col-sm-3>
+            <a href="javascript:everythingOn();" class="btn btn-primary col-xs-5">ON</a>
+            <div class="control-label col-xs-2">&nbsp;</div>
+            <a href="javascript:everythingOff();" class="btn btn-primary col-xs-5">OFF</a>
+          </div>
+          <div class=col-sm-6>
+          </div>
+        </div>
       </div>
     </div>
 
   </div>
-  <script type="text/javascript">
-
-    // application code here!
-
-  </script>
   <script src="static/controllers.js"></script>
 </body>
 </html>

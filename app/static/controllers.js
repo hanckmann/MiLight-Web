@@ -76,7 +76,7 @@ $('#action').change(function() {
       populateSelect('sel_value', JSON.parse(message))
     }).fail(function(message) {
       // console.log(JSON.stringify(message))
-      showMessage(message);
+      showError(message);
     });
     enableValue('sel_value');
   }
@@ -89,7 +89,7 @@ $('#action').change(function() {
       populateSelect('sel_value', JSON.parse(message), is_color=true)
     }).fail(function(message) {
       // console.log(JSON.stringify(message))
-      showMessage(message);
+      showError(JSON.stringify(message));
     });
     enableValue('sel_value');
   }
@@ -147,13 +147,44 @@ function outputUpdate(vol) {
 
 
 // Submit the form data
-function submitAsJson() {
+function submitForm() {
+  bridge = document.getElementById("bridge").value;
+  bulb = document.getElementById("RGBW").checked ? 'RGBW' : 'WHITE';
+  action = document.getElementById("action").value;
+  group = document.getElementById("group").value;
+  value = getCurrentValue();
+  submitAsJson(bridge, bulb, action, group, value);
+}
+
+
+// Quick-Action functions
+
+function everythingOn() {
+  for (var i = 0; i < document.getElementById("bridge").length; ++i) {
+    bridge = document.getElementById("bridge")[i].value
+    submitAsJson(bridge, 'WHITE', 'ON', 'ALL', null)
+    submitAsJson(bridge, 'RGBW', 'ON', 'ALL', null)
+  }
+}
+
+function everythingOff() {
+  for (var i = 0; i < document.getElementById("bridge").length; ++i) {
+    bridge = document.getElementById("bridge")[i].value
+    submitAsJson(bridge, 'WHITE', 'OFF', 'ALL', null)
+    submitAsJson(bridge, 'RGBW', 'OFF', 'ALL', null)
+  }
+}
+
+
+// MiLight interaction (JSON based)
+
+function submitAsJson(bridge, bulb, action, group, value) {
   var JSONObject = {
-    "bridge": document.getElementById("bridge").value,
-    "bulb":   document.getElementById("RGBW").checked ? 'RGBW' : 'WHITE',
-    "action": document.getElementById("action").value,
-    "group":  document.getElementById("group").value,
-    "value":  getCurrentValue(),
+    "bridge": bridge,
+    "bulb":   bulb,
+    "action": action,
+    "group":  group,
+    "value":  value,
   };
   var JSONString = JSON.stringify(JSONObject);
   // console.info(JSONString);
@@ -186,6 +217,19 @@ function getCurrentValue() {
 
 // General functions
 
+function getCurrentValue() {
+  if (!document.getElementById('num_value').disabled) {
+    // Return num_value
+    return document.getElementById("num_value").value
+  }
+  if (!document.getElementById('sel_value').disabled) {
+    // Return sel_value
+    return $("#sel_value option:selected").text()
+  }
+  // In all other cases return an empty string
+  return ""
+}
+
 function showMessage(message) {
   console.log(message)
   $('#result-oke').text(message);
@@ -205,7 +249,3 @@ function hideCountdown(div_name, milliseconds) {
     $(div_name).fadeOut(1500);
   }, milliseconds, div_name);
 }
-
-// function showValueSlider2(newValue) {
-//     document.getElementById("rangeslider2").innerHTML=newValue;
-// }
