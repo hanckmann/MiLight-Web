@@ -42,7 +42,7 @@ def put_milight():
 @app.route('/milight/json', methods=['POST'])
 def route_milight_json():
     """ Json interface (REST) """
-    print(str(request.json))
+    # print(str(request.json))
     try:
         return route_milight(request.json['bridge'],
                              request.json['bulb'],
@@ -67,8 +67,8 @@ def route_milight_no_value(bridge, bulb, group, action):
 def route_milight(bridge, bulb, group, action, value):
     """ Direct access interface (REST) """
     # Parse and validate all input
-    print('bridge=' + str(bridge) + '\tbulb=' + str(bulb) + '\tgroup=' +
-          str(group) + '\taction=' + str(action) + '\tvalue=' + str(value))
+    # print('bridge=' + str(bridge) + '\tbulb=' + str(bulb) + '\tgroup=' +
+    #       str(group) + '\taction=' + str(action) + '\tvalue=' + str(value))
     try:
         mci.mci_parser.validate_command(bridge, bulb, group, action, value)
     except Exception as e:
@@ -152,10 +152,10 @@ def route_get_values_1_30():
 @app.route('/milight/colors')
 def route_get_values_colors():
     """ Get the color codes """
-    return json.dumps([color for color in mci.ColorGroup.COLOR_CODES.keys()])
+    return json.dumps([color for color in mci.bulbs.ColorGroup.COLOR_CODES.keys()])
 
 
 @app.route('/milight/disco')
 def route_get_disco():
     """ Get the disco codes """
-    return json.dumps([code for code in mci.ColorGroup.DISCO_CODES.keys()])
+    return json.dumps([code for code in mci.bulbs.ColorGroup.DISCO_CODES.keys()])
