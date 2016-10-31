@@ -1,16 +1,10 @@
-/*
-input[type='range'].colorrange {
-  background: linear-gradient(to right, white, violet, royalblue, lightskyblue, aqua, aquamarine, seagreen, green, limegreen, yellow, goldenrod, orange, red, pink, fuchsia, orchid, lavender, white);
-}
-*/
-
 .container-fluid {
   margin-right: auto;
   margin-left: auto;
   max-width: 400px; /* or 950px */
 }
 
-.container{
+.container {
     max-width:400px;
     margin:0 auto;/*make it centered*/
 }
