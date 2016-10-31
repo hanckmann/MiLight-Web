@@ -1,128 +1,104 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Milight Web Interface</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="icon" href="static/favicon.ico">
-  <script src="static/jquery.min.js"></script>
-  <script src="static/bootstrap.min.js"></script>
-  <link href="static/bootstrap.min.css" rel="stylesheet">
-  <link href="static/style.css" rel="stylesheet">
-</head>
-<body>
-  <div id="main" class="container">
-    <div class="navbar">
-      <!--
-      <div class="navbar-inner">
-        <a class="brand" href="#">Milight Web Interface</a>
-      </div>
-      -->
-      <div>
-        <ul class="nav nav-tabs">
-          <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
-           <li><a data-toggle="tab" href="#quickactions">Quick Actions</a></li>
-        </ul>
-      </div>
-    </div>
+{% extends "base.html" %}
+{% block content %}
+<div class="navbar">
+  <div>
+    <ul class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab" href="#home">Home</a></li>
+       <li><a data-toggle="tab" href="#quickactions">Quick Actions</a></li>
+    </ul>
+  </div>
+</div>
 
-    <div class="tab-content">
-      <!-- Default tab, contains all the standard functionality -->
-      <div id="home" class="tab-pane fade in active">
-        <form id="miform" class="form-horizontal">
-        <fieldset>
-          <legend>Milight Web Interface</legend>
+<div class="tab-content">
+  <!-- Default tab, contains all the standard functionality -->
+  <div id="home" class="tab-pane fade in active">
+    <form id="miform" class="form-horizontal">
+    <fieldset>
+      <legend><a href="/index">Milight Web Interface</a></legend>
 
-          <div class="form-group">
-          <label class="col-xs-4 control-label" for="bridge">Bridge</label>
-          <div class="col-xs-8">
-            <select id="bridge" name="bridge"  class="form-control">
-            {% for bridge in bridges %}
-            <option value="{{ bridge }}">{{ bridge }}</option>
-            {% endfor %}
-            </select>
-          </div>
-          </div>
-
-          <div id="select-bulb" class="form-group">
-            <label class="col-xs-4 control-label" for="bulb">Bulb</label>
-            <div class="col-xs-8"> 
-              <div class="col-sm-5">
-                <input type="radio" id="RGBW" name="bulb" value="RGBW" checked="checked"><label for="RGBW">&nbsp;RGBW</label>
-              </div>
-              <div class="col-sm-2"></div>
-              <div class="col-sm-5">
-                <input type="radio" id="WHITE" name="bulb" value="WHITE"><label for="WHITE">&nbsp;WHITE</label>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-          <label class="col-xs-4 control-label" for="action">Action</label>
-          <div class="col-xs-8">
-            <select id="action" name="action"  class="form-control"1>
-            </select>
-          </div>
-          </div>
-
-          <div class="form-group">
-          <label class="col-xs-4 control-label" for="group">Group</label>
-          <div class="col-xs-8">
-            <select id="group" name="group" class="form-control">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="ALL">ALL</option>
-            </select>
-          </div>
-          </div>
-
-          <div id="num_value_div" class="form-group">
-          <label class="col-xs-4 control-label" for="value">Value</label>
-          <div class="col-xs-8">
-          <input id="num_value" name="no-value" placeholder="" class="form-control input-md" type="range" value="1" step="1" oninput="outputUpdate(value)">
-          </div>
-          <div class="col-xs-8">
-          <output for="num_value" id="set_value"></output>
-          </div>
-          </div>
-
-          <div id="sel_value_div" class="form-group">
-          <label class="col-xs-4 control-label" for="value">Value</label>
-          <div class="col-xs-8">
-            <select id="sel_value" name="no-value" class="form-control">
-            </select>
-          </div>
-          </div>
-
-          <div class="form-group">
-          <label class="col-xs-4 control-label" for="submit"></label>
-          <div class="col-xs-8">
-            <a href="javascript:submitForm();" class="btn btn-primary">Submit!</a>
-          </div>
-          </div>
-        </fieldset>
-        </form>
-        <p></p>
-        <div id="div-error"><pre id="result-error" class="result alert alert-danger col-xs-12" role="alert"></pre></div>
-        <div id="div-message"><pre id="result-oke" class="result alert alert-info col-xs-12" role="alert"></pre></div>
+      <div class="form-group">
+        <label class="col-xs-4 control-label" for="bridge">Bridge</label>
+        <div class="col-xs-8">
+          <select id="bridge" name="bridge"  class="form-control">
+          {% for bridge in bridges %}
+          <option value="{{ bridge }}">{{ bridge }}</option>
+          {% endfor %}
+          </select>
+        </div>
       </div>
 
-      <!-- Quick-action tab, contains some quick-action functionality -->
-      <div id="quickactions" class="tab-pane fade in">
-        <div class="col-xs-4">
-            <label class="control-label col-xs-2" for="everythingOnOff">All lights</label>
+      <div id="select-bulb" class="form-group">
+        <label class="col-xs-4 control-label" for="bulb">Bulb</label>
+        <div class="col-xs-8"> 
+          <div class="col-sm-5">
+            <input type="radio" id="RGBW" name="bulb" value="RGBW" checked="checked"><label for="RGBW">&nbsp;RGBW</label>
           </div>
-          <div class="col-xs-8"> 
-            <a href="javascript:everythingOn();" class="btn btn-primary col-xs-5">ON</a>
-            <div class="col-xs-2"></div>
-            <a href="javascript:everythingOff();" class="btn btn-primary col-xs-5">OFF</a>
+          <div class="col-sm-2"></div>
+          <div class="col-sm-5">
+            <input type="radio" id="WHITE" name="bulb" value="WHITE"><label for="WHITE">&nbsp;WHITE</label>
           </div>
         </div>
       </div>
-    </div>
 
+      <div class="form-group">
+        <label class="col-xs-4 control-label" for="action">Action</label>
+        <div class="col-xs-8">
+          <select id="action" name="action"  class="form-control">
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-xs-4 control-label" for="group">Group</label>
+        <div class="col-xs-8">
+          <select id="group" name="group" class="form-control">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="ALL">ALL</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="num_value_div" class="form-group">
+        <label class="col-xs-4 control-label" for="value">Value</label>
+        <div class="col-xs-8">
+          <input id="num_value" name="no-value" class="form-control input-md" type="range" value="1" step="1" oninput="outputUpdate(value)">
+        </div>
+        <div class="col-xs-8">
+          <output for="num_value" id="set_value"></output>
+        </div>
+      </div>
+
+      <div id="sel_value_div" class="form-group">
+        <label class="col-xs-4 control-label" for="value">Value</label>
+        <div class="col-xs-8">
+          <select id="sel_value" name="no-value" class="form-control">
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="col-xs-4 control-label" for="submit"></label>
+        <div class="col-xs-8">
+          <a href="javascript:submitForm();" class="btn btn-primary">Submit!</a>
+        </div>
+      </div>
+    </fieldset>
+    </form>
   </div>
-  <script src="static/controllers.js"></script>
-</body>
-</html>
+
+  <!-- Quick-action tab, contains some quick-action functionality -->
+  <div id="quickactions" class="tab-pane fade in">
+    <div class="col-xs-4">
+        <label class="control-label col-xs-2" for="everythingOnOff">All lights</label>
+    </div>
+    <div class="col-xs-8"> 
+      <a href="javascript:everythingOn();" class="btn btn-primary col-xs-5">ON</a>
+      <div class="col-xs-2"></div>
+        <a href="javascript:everythingOff();" class="btn btn-primary col-xs-5">OFF</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -215,6 +215,42 @@ function getCurrentValue() {
 }
 
 
+// Submit the form data
+// http://stackoverflow.com/questions/1184624/convert-form-data-to-javascript-object-with-jquery
+
+function submitSettings() {
+  var JSONString = JSON.stringify($('form').serializeObject());
+  // console.info(JSONString);
+
+  $.ajax({
+    type : "POST",
+    url : "/settings",
+    data: JSONString,
+    contentType: 'application/json;charset=UTF-8'
+  }).done(function(message) {
+    showMessage(message);
+  }).fail(function(message) {
+    showError(message);
+  });
+}
+
+$.fn.serializeObject = function() {
+  var o = {};
+  var a = this.serializeArray();
+  $.each(a, function() {
+    if (o[this.name] !== undefined) {
+      if (!o[this.name].push) {
+        o[this.name] = [o[this.name]];
+      }
+      o[this.name].push(this.value || '');
+    } else {
+      o[this.name] = this.value || '';
+    }
+  });
+  return o;
+};
+
+
 // General functions
 
 function getCurrentValue() {

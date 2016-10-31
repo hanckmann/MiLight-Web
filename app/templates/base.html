@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% if title %}
+    <title>{{ title }}</title>
+    {% else %}
+    <title>MiLight Web</title>
+    {% endif %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="static/favicon.ico">
+    <script src="static/jquery.min.js"></script>
+    <script src="static/bootstrap.min.js"></script>
+    <link href="static/bootstrap.min.css" rel="stylesheet">
+    <link href="static/style.css" rel="stylesheet">
+  </head>
+  <body>
+    <div id="main" class="container">
+    {% block content %}
+    {% endblock %}
+    <p></p>
+    <div id="div-error"><pre id="result-error" class="result alert alert-danger col-xs-12" role="alert"></pre></div>
+    <div id="div-message"><pre id="result-oke" class="result alert alert-info col-xs-12" role="alert"></pre></div>
+    </div>
+    <script src="static/controllers.js"></script>
+  </body>
+</html>
