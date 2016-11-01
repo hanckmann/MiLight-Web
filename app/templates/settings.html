@@ -9,86 +9,86 @@
       <legend><a href="/index">Milight Web Interface</a> :: <a href="/settings">Settings</a></legend>
 
       <div class="panel-group" id="accordion">
-      {% for bridge in bridges %}
-        <div class="panel panel-default" id="{{bridge['mac-address']}}-panel">
+      {% for setting in settings %}
+        <div class="panel panel-default" id="{{setting['mac-address']}}-panel">
           <div class="panel-heading">
             <h4 class="panel-title">
-              <a data-toggle="collapse" data-target="#{{bridge['mac-address']}}-collapse" href="#{{bridge['mac-address']}}-collapse">
-              Names for bridge: {{bridge['mac-address']}}
+              <a data-toggle="collapse" data-target="#{{setting['mac-address']}}-collapse" href="#{{setting['mac-address']}}-collapse">
+              Names for bridge: {{setting['mac-address']}}
               </a>
             </h4>
           </div>
-          <div id="{{bridge['mac-address']}}-collapse" class="panel-collapse collapse">
+          <div id="{{setting['mac-address']}}-collapse" class="panel-collapse collapse">
             <div class="panel-body">
             <!-- Bridge name -->
               <div class="form-group">
-                <label class="col-xs-5 control-label" for="{{bridge['mac-address']}}-name">Bridge:</label>
+                <label class="col-xs-5 control-label" for="{{setting['mac-address']}}-name">Bridge:</label>
                 <div class="col-xs-7">
-                  <input id="{{bridge['mac-address']}}-name" name="{{bridge['mac-address']}}-name" value="{{bridge['name']}}" class="form-control input-md" type="text">
+                  <input id="{{setting['mac-address']}}-name" name="{{setting['mac-address']}}-name" value="{{setting['name']}}" class="form-control input-md" type="text">
                 </div>
               </div>
             <hr/>
             <!-- group names -->
               <div class="form-group">
-                <label class="col-xs-5 control-label" for="{{bridge['mac-address']}}-rgbw-group">RGBW groups:</label>
+                <label class="col-xs-5 control-label" for="{{setting['mac-address']}}-rgbw-group">RGBW groups:</label>
                 <div class="col-xs-7">
-                  <input id="{{bridge['mac-address']}}-rgbw-group" name="{{bridge['mac-address']}}-rgbw-group" value="{{bridge['rgbw']['group']}}" class="col-xs-5 form-control input-md" type="text">
+                  <input id="{{setting['mac-address']}}-rgbw-group" name="{{setting['mac-address']}}-rgbw-group" value="{{setting['rgbw']['group']}}" class="col-xs-5 form-control input-md" type="text">
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-xs-5 control-label" for="{{bridge['mac-address']}}-rgbw-group-1">Group 1:</label>
+                <label class="col-xs-5 control-label" for="{{setting['mac-address']}}-rgbw-group-1">Group 1:</label>
                 <div class="col-xs-7">
-                  <input id="{{bridge['mac-address']}}-rgbw-group-1" name="{{bridge['mac-address']}}-rgbw-group-1" value="{{bridge['rgbw']['group-1']}}" class="col-xs-5 form-control input-md" type="text">
+                  <input id="{{setting['mac-address']}}-rgbw-group-1" name="{{setting['mac-address']}}-rgbw-group-1" value="{{setting['rgbw']['group-1']}}" class="col-xs-5 form-control input-md" type="text">
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-xs-5 control-label" for="{{bridge['mac-address']}}-rgbw-group-2">Group 2:</label>
+                <label class="col-xs-5 control-label" for="{{setting['mac-address']}}-rgbw-group-2">Group 2:</label>
                 <div class="col-xs-7">
-                  <input id="{{bridge['mac-address']}}-rgbw-group-2" name="{{bridge['mac-address']}}-rgbw-group-2" value="{{bridge['rgbw']['group-2']}}" class="col-xs-5 form-control input-md" type="text">
+                  <input id="{{setting['mac-address']}}-rgbw-group-2" name="{{setting['mac-address']}}-rgbw-group-2" value="{{setting['rgbw']['group-2']}}" class="col-xs-5 form-control input-md" type="text">
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-xs-5 control-label" for="{{bridge['mac-address']}}-rgbw-group-3">Group 3:</label>
+                <label class="col-xs-5 control-label" for="{{setting['mac-address']}}-rgbw-group-3">Group 3:</label>
                 <div class="col-xs-7">
-                  <input id="{{bridge['mac-address']}}-rgbw-group-3" name="{{bridge['mac-address']}}-rgbw-group-3" value="{{bridge['rgbw']['group-3']}}" class="col-xs-5 form-control input-md" type="text">
+                  <input id="{{setting['mac-address']}}-rgbw-group-3" name="{{setting['mac-address']}}-rgbw-group-3" value="{{setting['rgbw']['group-3']}}" class="col-xs-5 form-control input-md" type="text">
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-xs-5 control-label" for="{{bridge['mac-address']}}-rgbw-group-4">Group 4:</label>
+                <label class="col-xs-5 control-label" for="{{setting['mac-address']}}-rgbw-group-4">Group 4:</label>
                 <div class="col-xs-7">
-                  <input id="{{bridge['mac-address']}}-rgbw-group-4" name="{{bridge['mac-address']}}-rgbw-group-4" value="{{bridge['rgbw']['group-4']}}" class="col-xs-5 form-control input-md" type="text">
+                  <input id="{{setting['mac-address']}}-rgbw-group-4" name="{{setting['mac-address']}}-rgbw-group-4" value="{{setting['rgbw']['group-4']}}" class="col-xs-5 form-control input-md" type="text">
                 </div>
               </div>
             <hr/>
             <!-- group names -->
               <div class="form-group">
-                <label class="col-xs-5 control-label" for="{{bridge['mac-address']}}-white-group">WHITE groups:</label>
+                <label class="col-xs-5 control-label" for="{{setting['mac-address']}}-white-group">WHITE groups:</label>
                 <div class="col-xs-7">
-                  <input id="{{bridge['mac-address']}}-white-group" name="{{bridge['mac-address']}}-white-group" value="{{bridge['white']['group']}}" class="col-xs-5 form-control input-md" type="text">
+                  <input id="{{setting['mac-address']}}-white-group" name="{{setting['mac-address']}}-white-group" value="{{setting['white']['group']}}" class="col-xs-5 form-control input-md" type="text">
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-xs-5 control-label" for="{{bridge['mac-address']}}-white-group-1">Group 1:</label>
+                <label class="col-xs-5 control-label" for="{{setting['mac-address']}}-white-group-1">Group 1:</label>
                 <div class="col-xs-7">
-                  <input id="{{bridge['mac-address']}}-white-group-1" name="{{bridge['mac-address']}}-white-group-1" value="{{bridge['white']['group-1']}}" class="col-xs-5 form-control input-md" type="text">
+                  <input id="{{setting['mac-address']}}-white-group-1" name="{{setting['mac-address']}}-white-group-1" value="{{setting['white']['group-1']}}" class="col-xs-5 form-control input-md" type="text">
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-xs-5 control-label" for="{{bridge['mac-address']}}-white-group-2">Group 2:</label>
+                <label class="col-xs-5 control-label" for="{{setting['mac-address']}}-white-group-2">Group 2:</label>
                 <div class="col-xs-7">
-                  <input id="{{bridge['mac-address']}}-white-group-2" name="{{bridge['mac-address']}}-white-group-2" value="{{bridge['white']['group-2']}}" class="col-xs-5 form-control input-md" type="text">
+                  <input id="{{setting['mac-address']}}-white-group-2" name="{{setting['mac-address']}}-white-group-2" value="{{setting['white']['group-2']}}" class="col-xs-5 form-control input-md" type="text">
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-xs-5 control-label" for="{{bridge['mac-address']}}-white-group-3">Group 3:</label>
+                <label class="col-xs-5 control-label" for="{{setting['mac-address']}}-white-group-3">Group 3:</label>
                 <div class="col-xs-7">
-                  <input id="{{bridge['mac-address']}}-white-group-3" name="{{bridge['mac-address']}}-white-group-3" value="{{bridge['white']['group-3']}}" class="col-xs-5 form-control input-md" type="text">
+                  <input id="{{setting['mac-address']}}-white-group-3" name="{{setting['mac-address']}}-white-group-3" value="{{setting['white']['group-3']}}" class="col-xs-5 form-control input-md" type="text">
                 </div>
               </div>
               <div class="form-group">
-                <label class="col-xs-5 control-label" for="{{bridge['mac-address']}}-white-group-4">Group 4:</label>
+                <label class="col-xs-5 control-label" for="{{setting['mac-address']}}-white-group-4">Group 4:</label>
                 <div class="col-xs-7">
-                  <input id="{{bridge['mac-address']}}-white-group-4" name="{{bridge['mac-address']}}-white-group-4" value="{{bridge['white']['group-4']}}" class="col-xs-5 form-control input-md" type="text">
+                  <input id="{{setting['mac-address']}}-white-group-4" name="{{setting['mac-address']}}-white-group-4" value="{{setting['white']['group-4']}}" class="col-xs-5 form-control input-md" type="text">
                 </div>
               </div>
             </div>
@@ -104,4 +104,5 @@
       </div>
     </div>
   </form>
+  <script src="/static/controller_settings.js"></script>
 {% endblock %}

@@ -253,11 +253,11 @@ function getCurrentValue() {
 
 function submitSettings() {
   var JSONString = JSON.stringify($('form').serializeObject());
-  // console.info(JSONString);
+  console.info(JSONString);
 
   $.ajax({
     type : "POST",
-    url : "/settings",
+    url : "/milight/settings",
     data: JSONString,
     contentType: 'application/json;charset=UTF-8'
   }).done(function(message) {

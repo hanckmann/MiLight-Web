@@ -13,16 +13,17 @@ from app import app
 
 # Populate the bridges dict
 scan_time = datetime.datetime.now()
-bridges = dict()
-settings = dict()
+bridges = dict()  # bridges[mac] = ip
+settings = list()
 settings_file = '/tmp/settings.json'
 
 
 @app.route('/')
 @app.route('/index')
+@app.route('/milight/index')
 def index():
     """ Landing page """
-    global settings
+    global bridges
     route_milight_scan()
     return render_template('index.html',
                            settings=settings)
@@ -70,6 +71,10 @@ def route_milight_no_value(bridge, bulb, group, action):
 @app.route('/milight/<bridge>/<bulb>/<group>/<action>/<value>')
 def route_milight(bridge, bulb, group, action, value):
     """ Direct access interface (REST) """
+    global bridges
+    print(bridges)
+    if bridge in bridges:
+        bridge = bridges[bridge]
     # Parse and validate all input
     # print('bridge=' + str(bridge) + '\tbulb=' + str(bulb) + '\tgroup=' +
     #       str(group) + '\taction=' + str(action) + '\tvalue=' + str(value))
@@ -91,11 +96,9 @@ def route_milight_scan():
     global scan_time
     scan_time = datetime.datetime.now()
     discovered = mci.bridges.DiscoverBridge(port=48899).discover()
-    print(discovered)
     bridges = dict()
     for (ip, mac) in discovered:
         bridges[mac] = ip
-    bridges['TEST-MAC'] = 'TEST-IP'
     global settings
     global settings_file
     settings = load_settings(settings_file)
@@ -170,8 +173,7 @@ def route_get_disco():
 
 # Settings
 
-
-@app.route('/settings', methods=['GET', 'POST'])
+@app.route('/milight/settings', methods=['GET', 'POST'])
 def route_settings():
     """ View and change settings """
     global settings
@@ -180,7 +182,8 @@ def route_settings():
         return render_template('settings.html',
                                settings=settings)
     if request.method == 'POST':
-        settings = json_to_settings(settings_to_json(json_to_settings(request.json)))  # Than we know we have a good set of settings, but very inefficient
+        print('SETTINGS POST')
+        settings = json_to_settings(settings, request.json)
         save_settings(settings, settings_file)
         return json.dumps({'result': 'oke'})
     # Else
@@ -202,11 +205,12 @@ def save_settings(settings, filename):
 
 def load_settings(filename):
     """ Load the settings-object from file (and extend if required) """
+    global bridges
     settings = list()
     if os.path.isfile(filename):
         with open(filename) as file:
             settings = json.load(file)
-            settings = json_to_settings(settings_to_json(settings))
+            settings = json_to_settings(settings, settings_to_json(settings, bridges))
     return settings
 
 
@@ -217,17 +221,17 @@ def update_settings(settings, bridges):
     for bridge in new_bridges:
         # Bulb settings
         rgbw_settings = dict()
-        rgbw_settings['group'] = 'rALL'
-        rgbw_settings['group-1'] = 'r1'
-        rgbw_settings['group-2'] = 'r2'
-        rgbw_settings['group-3'] = 'r3'
-        rgbw_settings['group-4'] = 'r4'
+        rgbw_settings['group'] = 'ALL'
+        rgbw_settings['group-1'] = '1'
+        rgbw_settings['group-2'] = '2'
+        rgbw_settings['group-3'] = '3'
+        rgbw_settings['group-4'] = '4'
         white_settings = dict()
-        white_settings['group'] = 'wALL'
-        white_settings['group-1'] = 'w1'
-        white_settings['group-2'] = 'w2'
-        white_settings['group-3'] = 'w3'
-        white_settings['group-4'] = 'w4'
+        white_settings['group'] = 'ALL'
+        white_settings['group-1'] = '1'
+        white_settings['group-2'] = '2'
+        white_settings['group-3'] = '3'
+        white_settings['group-4'] = '4'
         # Bridge settings
         bridge_settings = dict()
         bridge_settings['mac-address'] = bridge
@@ -239,10 +243,10 @@ def update_settings(settings, bridges):
     return settings
 
 
-def json_to_settings(settings, setting_parts=dict()):
+def json_to_settings(settings, setting_form=dict()):
     """ JSON to settings-object """
     mac_addresses = [setting['mac-address'] for setting in settings]
-    for setting_key, setting_value in setting_parts.items():
+    for setting_key, setting_value in setting_form.items():
         # Split into three: bridge | <bulbtype> | group(s)
         identifier = setting_key.split("-")
         if not identifier:
@@ -258,7 +262,7 @@ def json_to_settings(settings, setting_parts=dict()):
             if not identifier[1] == 'name':
                 print('ERROR: len(identifier) != 2; identifier[1] != "name"; ->' + str(setting_key))
                 continue
-            setting = [setting['mac-address'] for setting in settings if setting['mac-address'] == mac_address]
+            setting = [setting for setting in settings if setting['mac-address'] == mac_address][0]
             setting['name'] = setting_value
             continue
         # Check the bulb-type and group(s)
@@ -267,6 +271,7 @@ def json_to_settings(settings, setting_parts=dict()):
             if identifier[1] not in bulbtype:
                 print('ERROR: identifier[1] not in bulbtype; ->' + str(setting_key))
                 continue
+            setting = [setting for setting in settings if setting['mac-address'] == mac_address][0]
             bulb_setting = setting[identifier[1]]
             groups = ['1', '2', '3', '4']
             if len(identifier) == 3:
