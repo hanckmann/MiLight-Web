@@ -20,8 +20,8 @@
         <label class="col-xs-4 control-label" for="bridge">Bridge</label>
         <div class="col-xs-8">
           <select id="bridge" name="bridge"  class="form-control">
-          {% for bridge in bridges %}
-          <option value="{{ bridge }}">{{ bridge }}</option>
+          {% for setting in settings %}
+          <option value="{{ setting['mac-address'] }}">{{ setting['name'] }}</option>
           {% endfor %}
           </select>
         </div>
@@ -52,11 +52,6 @@
         <label class="col-xs-4 control-label" for="group">Group</label>
         <div class="col-xs-8">
           <select id="group" name="group" class="form-control">
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="ALL">ALL</option>
           </select>
         </div>
       </div>

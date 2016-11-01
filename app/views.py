@@ -12,17 +12,20 @@ from app import app
 
 
 # Populate the bridges dict
-bridges = list()
-bridges_time = datetime.datetime.now()
+scan_time = datetime.datetime.now()
+bridges = dict()
+settings = dict()
+settings_file = '/tmp/settings.json'
 
 
 @app.route('/')
 @app.route('/index')
 def index():
     """ Landing page """
+    global settings
     route_milight_scan()
     return render_template('index.html',
-                           bridges=bridges)
+                           settings=settings)
 
 
 @app.route('/milight', methods=['POST'])
@@ -79,16 +82,24 @@ def route_milight(bridge, bulb, group, action, value):
     return json.dumps({'status': 'success'})
 
 
+# Get bridges
+
 @app.route('/milight/scan')
 def route_milight_scan():
     """ scan for bridges """
     global bridges
-    global bridges_time
+    global scan_time
+    scan_time = datetime.datetime.now()
     discovered = mci.bridges.DiscoverBridge(port=48899).discover()
-    bridges_time = datetime.datetime.now()
-    bridges = list()
-    for db in discovered:
-        bridges.append(db[1])
+    print(discovered)
+    bridges = dict()
+    for (ip, mac) in discovered:
+        bridges[mac] = ip
+    bridges['TEST-MAC'] = 'TEST-IP'
+    global settings
+    global settings_file
+    settings = load_settings(settings_file)
+    settings = update_settings(settings, list(bridges.keys()))
     return route_milight_bridges()
 
 
@@ -96,13 +107,8 @@ def route_milight_scan():
 @app.route('/milight/bridges')
 def route_milight_bridges():
     """ Provide available bridges """
-    time_difference = (datetime.datetime.now() - bridges_time).seconds
-    if not bridges:
-        if time_difference > 15:
-            return route_milight_scan()
-        else:
-            bridges.append('none-tmp')
-    return json.dumps({'bridges': bridges, 'time': str(bridges_time)})
+    bridges = [setting['mac-address'] for setting in settings]
+    return json.dumps({'bridges': bridges, 'time': str(scan_time)})
 
 
 # Get available actions
@@ -163,57 +169,69 @@ def route_get_disco():
 
 
 # Settings
-settings_file = '/tmp/settings.json'
 
 
 @app.route('/settings', methods=['GET', 'POST'])
-def settings_route():
+def route_settings():
     """ View and change settings """
+    global settings
     if request.method == 'GET':
         route_milight_scan()
-        bridges.append('dummy-bridge')
-        if os.path.isfile(settings_file):
-            with open(settings_file) as file:
-                settings = json.load(file)
-                settings = json_to_settings(settings_to_json(settings))
-        else:
-            settings = json_to_settings()
-        print('JSON DUMP')
-        print(settings)
         return render_template('settings.html',
-                               bridges=settings)
+                               settings=settings)
     if request.method == 'POST':
-        settings = json_to_settings(request.json)
-        with open(settings_file, 'w') as file:
-            json.dump(settings, file, sort_keys=True)
-        # print(json.dumps(settings, sort_keys=True))
+        settings = json_to_settings(settings_to_json(json_to_settings(request.json)))  # Than we know we have a good set of settings, but very inefficient
+        save_settings(settings, settings_file)
         return json.dumps({'result': 'oke'})
     # Else
     return json.dumps({'result': 'No valid action'})
 
 
-def json_to_settings(flat=dict()):
-    """ JSON to settings-object """
-    # print(flat)
+@app.route('/milight/settings/<bridge>')
+def route_get_settings_bridge(bridge):
+    """ Get the settings for a bridge """
+    setting = [setting for setting in settings if setting['mac-address'] == bridge]
+    return json.dumps(setting[0])
+
+
+def save_settings(settings, filename):
+    """ Save the settings-object to file """
+    with open(filename, 'w') as file:
+        json.dump(settings, file, sort_keys=True)
+
+
+def load_settings(filename):
+    """ Load the settings-object from file (and extend if required) """
     settings = list()
-    for bridge in bridges:
+    if os.path.isfile(filename):
+        with open(filename) as file:
+            settings = json.load(file)
+            settings = json_to_settings(settings_to_json(settings))
+    return settings
+
+
+def update_settings(settings, bridges):
+    """ Init an empty settings-object """
+    settings_macs = [setting['mac-address'] for setting in settings]
+    new_bridges = [bridge for bridge in bridges if bridge not in settings_macs]
+    for bridge in new_bridges:
         # Bulb settings
         rgbw_settings = dict()
-        rgbw_settings['group'] = flat.get(bridge + '-rgbw-group', '')
-        rgbw_settings['group-1'] = flat.get(bridge + '-rgbw-group-1', '')
-        rgbw_settings['group-2'] = flat.get(bridge + '-rgbw-group-2', '')
-        rgbw_settings['group-3'] = flat.get(bridge + '-rgbw-group-3', '')
-        rgbw_settings['group-4'] = flat.get(bridge + '-rgbw-group-4', '')
+        rgbw_settings['group'] = 'rALL'
+        rgbw_settings['group-1'] = 'r1'
+        rgbw_settings['group-2'] = 'r2'
+        rgbw_settings['group-3'] = 'r3'
+        rgbw_settings['group-4'] = 'r4'
         white_settings = dict()
-        white_settings['group'] = flat.get(bridge + '-white-group', '')
-        white_settings['group-1'] = flat.get(bridge + '-white-group-1', '')
-        white_settings['group-2'] = flat.get(bridge + '-white-group-2', '')
-        white_settings['group-3'] = flat.get(bridge + '-white-group-3', '')
-        white_settings['group-4'] = flat.get(bridge + '-white-group-4', '')
+        white_settings['group'] = 'wALL'
+        white_settings['group-1'] = 'w1'
+        white_settings['group-2'] = 'w2'
+        white_settings['group-3'] = 'w3'
+        white_settings['group-4'] = 'w4'
         # Bridge settings
         bridge_settings = dict()
         bridge_settings['mac-address'] = bridge
-        bridge_settings['name'] = flat.get(bridge + '-name', '')
+        bridge_settings['name'] = bridge
         bridge_settings['rgbw'] = rgbw_settings
         bridge_settings['white'] = white_settings
         # Add to settings-object
@@ -221,7 +239,50 @@ def json_to_settings(flat=dict()):
     return settings
 
 
-def settings_to_json(settings):
+def json_to_settings(settings, setting_parts=dict()):
+    """ JSON to settings-object """
+    mac_addresses = [setting['mac-address'] for setting in settings]
+    for setting_key, setting_value in setting_parts.items():
+        # Split into three: bridge | <bulbtype> | group(s)
+        identifier = setting_key.split("-")
+        if not identifier:
+            print('ERROR: identifier undefined; ->' + str(setting_key))
+            continue
+        # Check if the mac-address is known
+        mac_address = identifier[0]
+        if mac_address not in mac_addresses:
+            print('ERROR: mac_address not in mac_addresses; ->' + str(setting_key))
+            continue
+        # Check if a name is provided
+        if len(identifier) == 2:
+            if not identifier[1] == 'name':
+                print('ERROR: len(identifier) != 2; identifier[1] != "name"; ->' + str(setting_key))
+                continue
+            setting = [setting['mac-address'] for setting in settings if setting['mac-address'] == mac_address]
+            setting['name'] = setting_value
+            continue
+        # Check the bulb-type and group(s)
+        if len(identifier) >= 3:
+            bulbtype = ['rgbw', 'white']
+            if identifier[1] not in bulbtype:
+                print('ERROR: identifier[1] not in bulbtype; ->' + str(setting_key))
+                continue
+            bulb_setting = setting[identifier[1]]
+            groups = ['1', '2', '3', '4']
+            if len(identifier) == 3:
+                bulb_setting['group'] = setting_value
+                continue
+            elif len(identifier) == 4:
+                if identifier[3] not in groups:
+                    print('ERROR: identifier[3] not in groups; ->' + str(setting_key))
+                    continue
+                bulb_setting['group-' + identifier[3]] = setting_value
+                continue
+        print('ERROR: identifier has invalid length ->' + str(setting_key))
+    return settings
+
+
+def settings_to_json(settings, bridges):
     """ Settings-object to JSON """
     flat = dict()
     remaining_bridges = [bridge for bridge in bridges]

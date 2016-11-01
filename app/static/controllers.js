@@ -1,18 +1,51 @@
 // On document ready
 // A $( document ).ready() block.
 $( document ).ready(function() {
-  updateActions('RGBW')
+  bridge = document.getElementById("bridge").value;
+  bulb = 'RGBW';
+  if (document.getElementById("WHITE").checked) {
+    bulb = 'WHITE';
+  }
+  updateGroupNames(bridge, bulb);
+  updateActions(bulb);
   enableValue('');
   $('#div-error').hide();
   $('#div-message').hide();
 });
 
 
-// Change actions when radiobutton is clicked
+// Change group-names and actions when radiobutton is clicked
 $('#select-bulb input:radio').click(function() {
+  bridge = document.getElementById("bridge").value;
   bulb = $(this).val();
+  updateGroupNames(bridge, bulb);
   updateActions(bulb);
 });
+
+function updateGroupNames(bridge, bulb) {
+  pUrl = '/milight/settings/' + bridge;
+  if (bulb !== 'RGBW' && bulb !== 'WHITE') {
+    showError("Invalid bulb");
+    return;
+  }
+
+  $.ajax({
+    url : pUrl
+  }).done(function(message) {
+    // console.log(JSON.stringify(message))
+    var setting = JSON.parse(message);
+    var setting_bulb = setting[bulb.toLowerCase()];
+    selectValue = ['ALL', '1', '2', '3', '4'];
+    selectInnerHTML = [setting_bulb['group'], setting_bulb['group-1'], setting_bulb['group-2'], setting_bulb['group-3'], setting_bulb['group-4'] ];
+    populateSelect('group', selectValue, selectInnerHTML)
+    showMessage(message);
+  }).fail(function(message) {
+    // console.log(JSON.stringify(message))
+    showError(message);
+  });
+
+  document.getElementById('action').disabled = false
+}
 
 function updateActions(bulb) {
   if (bulb === 'RGBW') {
@@ -31,7 +64,7 @@ function updateActions(bulb) {
     url : pUrl
   }).done(function(message) {
     // console.log(JSON.stringify(message))
-    populateSelect('action', JSON.parse(message))
+    populateSelect('action', JSON.parse(message), JSON.parse(message))
     showMessage(message);
   }).fail(function(message) {
     // console.log(JSON.stringify(message))
@@ -73,7 +106,7 @@ $('#action').change(function() {
       url : pUrl
     }).done(function(message) {
       // console.log(JSON.stringify(message))
-      populateSelect('sel_value', JSON.parse(message))
+      populateSelect('sel_value', JSON.parse(message), JSON.parse(message))
     }).fail(function(message) {
       // console.log(JSON.stringify(message))
       showError(message);
@@ -86,7 +119,7 @@ $('#action').change(function() {
       url : pUrl
     }).done(function(message) {
       // console.log(JSON.stringify(message))
-      populateSelect('sel_value', JSON.parse(message), is_color=true)
+      populateSelect('sel_value', JSON.parse(message), JSON.parse(message), is_color=true)
     }).fail(function(message) {
       // console.log(JSON.stringify(message))
       showError(JSON.stringify(message));
@@ -119,7 +152,7 @@ function enableValue(sel) {
   }
 }
 
-function populateSelect(select_id, listObj, is_color=false) {
+function populateSelect(select_id, selectValue, selectInnerHTML, is_color=false) {
   var select = document.getElementById(select_id);
 
   // Remove all options
@@ -128,15 +161,15 @@ function populateSelect(select_id, listObj, is_color=false) {
     .remove()
     .end();
 
-  for(var i = 0; i < listObj.length; i++) {
-    // console.info(listObj[i]);
+  for(var i = 0; i < selectValue.length; i++) {
+    // console.info(selectValue[i]);
     var opt = document.createElement('option');
     if (is_color === true) {
         attributedata = 'background: ';
-        opt.setAttribute('style', attributedata.concat(listObj[i]));
+        opt.setAttribute('style', attributedata.concat(selectValue[i]));
     }
-    opt.value = listObj[i];
-    opt.innerHTML = listObj[i];
+    opt.value = selectValue[i];
+    opt.innerHTML = selectInnerHTML[i];
     select.appendChild(opt);
   }
 }
