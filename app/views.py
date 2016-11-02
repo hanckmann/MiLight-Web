@@ -1,4 +1,4 @@
-from flask import render_template, request
+from flask import render_template, request, redirect
 from flask_api import status
 import json
 import datetime
@@ -20,7 +20,12 @@ settings_file = '/tmp/settings.json'
 
 @app.route('/')
 @app.route('/index')
-@app.route('/milight/index')
+def route_redirect_index():
+    """ We do not work on the index, but only on the sub-level milight """
+    return redirect("/milight", code=302)
+
+
+@app.route('/milight', methods=['GET'])
 def index():
     """ Landing page """
     global bridges

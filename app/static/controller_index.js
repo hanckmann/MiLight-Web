@@ -20,6 +20,7 @@ $('#select-bulb input:radio').click(function() {
   bulb = $(this).val();
   updateGroupNames(bridge, bulb);
   updateActions(bulb);
+  updateValues('on');
 });
 
 function updateGroupNames(bridge, bulb) {
@@ -77,7 +78,11 @@ function updateActions(bulb) {
 
 // Change value input when action is selected
 $('#action').change(function() {
-  var action = $("#action option:selected").text();
+    var action = $("#action option:selected").text();
+    updateValues(action);
+});
+
+function updateValues(action) {
   // console.info('Action selected')
   // console.info(action)
 
@@ -129,7 +134,7 @@ $('#action').change(function() {
   else {
     showError("Invalid sel_value return stuff");
   }
-});
+}
 
 function enableValue(sel) {
   if (sel === 'num_value') {
@@ -253,7 +258,7 @@ function getCurrentValue() {
 
 function submitSettings() {
   var JSONString = JSON.stringify($('form').serializeObject());
-  console.info(JSONString);
+  // console.info(JSONString);
 
   $.ajax({
     type : "POST",
