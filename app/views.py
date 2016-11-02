@@ -15,7 +15,7 @@ from app import app
 scan_time = datetime.datetime.now()
 bridges = dict()  # bridges[mac] = ip
 settings = list()
-settings_file = '/tmp/settings.json'
+settings_file = './settings.json'
 
 
 @app.route('/')
