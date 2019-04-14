@@ -2,7 +2,6 @@ click==6.6
 Flask==0.11.1
 Flask-API==0.6.7
 itsdangerous==0.24
-Jinja2==2.8
 MarkupSafe==0.23
 mci==1.1.1
 Werkzeug==0.11.11
